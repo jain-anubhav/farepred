@@ -185,15 +185,21 @@ def rmse(y_true, y_pred):
     return np.sqrt(mean_squared_error(y_true, y_pred))
 
 
+def mape(y_true, y_pred):
+    return np.sum(np.abs(y_true - y_pred)) / np.sum(y_true)
+
+
 def evaluate_by_dfd(y_true, y_pred, dfd_vals, label='', baseline=None):
     overall = rmse(y_true, y_pred)
-    print(f"  {label}: RMSE={overall:.4f}")
+    overall_mape = mape(y_true, y_pred)
+    print(f"  {label}: RMSE={overall:.4f}, MAPE={overall_mape:.4f}")
     for dfd_val in [0, 5, 10, 20, 30, 39]:
         mask = dfd_vals == dfd_val
         if mask.sum() > 0:
             r = rmse(y_true[mask], y_pred[mask])
-            bl = f" (baseline={rmse(y_true[mask], baseline[mask]):.4f})" if baseline is not None else ""
-            print(f"    dfd={dfd_val}: RMSE={r:.4f}{bl}, n={mask.sum()}")
+            m = mape(y_true[mask], y_pred[mask])
+            bl = f" (baseline RMSE={rmse(y_true[mask], baseline[mask]):.4f}, MAPE={mape(y_true[mask], baseline[mask]):.4f})" if baseline is not None else ""
+            print(f"    dfd={dfd_val}: RMSE={r:.4f}, MAPE={m:.4f}{bl}, n={mask.sum()}")
     return overall
 
 
@@ -334,11 +340,14 @@ def main():
         seg_pred = lgb_seg.predict(X_te_seg)
         pred_f[test_mask] = seg_pred
         print(f"  Segment {seg_name} (dfd {lo}-{hi}): "
-              f"RMSE={rmse(y_test[test_mask], seg_pred):.4f} "
-              f"(baseline={rmse(y_test[test_mask], baseline_test[test_mask]):.4f})")
+              f"RMSE={rmse(y_test[test_mask], seg_pred):.4f}, "
+              f"MAPE={mape(y_test[test_mask], seg_pred):.4f} "
+              f"(baseline RMSE={rmse(y_test[test_mask], baseline_test[test_mask]):.4f}, "
+              f"MAPE={mape(y_test[test_mask], baseline_test[test_mask]):.4f})")
 
     rmse_f = rmse(y_test, pred_f)
-    print(f"  Segmented overall RMSE: {rmse_f:.4f}")
+    mape_f = mape(y_test, pred_f)
+    print(f"  Segmented overall RMSE: {rmse_f:.4f}, MAPE: {mape_f:.4f}")
 
     # ===========================
     # Feature Importances
@@ -352,10 +361,11 @@ def main():
     # SUMMARY
     # ===========================
     baseline_rmse = rmse(y_test, baseline_test)
+    baseline_mape = mape(y_test, baseline_test)
     print("\n=== FINAL SUMMARY ===")
-    print(f"{'Model':<35} {'RMSE':>8} {'vs Baseline':>12}")
-    print("-" * 58)
-    print(f"{'Baseline':<35} {baseline_rmse:>8.4f} {'(reference)':>12}")
+    print(f"{'Model':<35} {'RMSE':>8} {'MAPE':>8} {'RMSE vs BL':>11} {'MAPE vs BL':>11}")
+    print("-" * 78)
+    print(f"{'Baseline':<35} {baseline_rmse:>8.4f} {baseline_mape:>8.4f} {'(reference)':>11} {'(reference)':>11}")
     for label, r in [
         ("LightGBM-abs", rmse_a),
         ("LightGBM-resid", rmse_b),
@@ -364,8 +374,13 @@ def main():
         ("Ensemble (A+B+D)", rmse_e),
         ("Segmented LightGBM", rmse_f),
     ]:
-        pct = (baseline_rmse - r) / baseline_rmse * 100
-        print(f"  {label:<33} {r:>8.4f} {pct:>+11.2f}%")
+        preds = {'LightGBM-abs': pred_a, 'LightGBM-resid': pred_b,
+                 'DFD-aware blend': pred_c, 'XGBoost-abs': pred_d,
+                 'Ensemble (A+B+D)': pred_e, 'Segmented LightGBM': pred_f}
+        m = mape(y_test, preds[label])
+        rmse_pct = (baseline_rmse - r) / baseline_rmse * 100
+        mape_pct = (baseline_mape - m) / baseline_mape * 100
+        print(f"  {label:<33} {r:>8.4f} {m:>8.4f} {rmse_pct:>+10.2f}% {mape_pct:>+10.2f}%")
 
 
 if __name__ == '__main__':

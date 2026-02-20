@@ -153,7 +153,8 @@ def get_feature_cols():
 def evaluate(y_true, y_pred, label=''):
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = np.mean(np.abs(y_true - y_pred))
-    print(f"  {label}: RMSE={rmse:.4f}, MAE={mae:.4f}")
+    mape = np.sum(np.abs(y_true - y_pred)) / np.sum(y_true)
+    print(f"  {label}: RMSE={rmse:.4f}, MAE={mae:.4f}, MAPE={mape:.4f}")
     return rmse
 
 
