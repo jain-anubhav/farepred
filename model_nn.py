@@ -7,6 +7,10 @@ Models:
   GRU  - Gated Recurrent Unit over price history + tabular features
 
 Compares against the baseline and best GBM ensemble from model_v2.py.
+
+v2: added competitor price trajectory features (market mean/min at each
+    dfd=40..49, market trend, price-vs-market relative momentum) and a
+    third sequence channel (normalised market mean) for CNN/GRU.
 """
 import pandas as pd
 import numpy as np
@@ -80,10 +84,38 @@ def build_features(df, observation_dfd=OBSERVATION_DFD):
         market_n_airlines=('airline', 'nunique'),
     ).reset_index()
 
+    # ------------------------------------------------------------------
+    # Competitor trajectory: market mean & min at every dfd=40..49
+    # ------------------------------------------------------------------
+    mkt_traj = None
+    for dfd_val in range(observation_dfd, min(observation_dfd + 10, 50)):
+        sub = df[df['dfd'] == dfd_val].groupby(['pathod_id', 'depdt']).agg(
+            **{
+                f'mkt_mean_dfd{dfd_val}': ('target_price', 'mean'),
+                f'mkt_min_dfd{dfd_val}':  ('target_price', 'min'),
+            }
+        ).reset_index()
+        mkt_traj = sub if mkt_traj is None else mkt_traj.merge(sub, on=['pathod_id', 'depdt'], how='outer')
+
+    mean_hist_cols = [f'mkt_mean_dfd{d}' for d in range(observation_dfd, min(observation_dfd + 10, 50))]
+    min_hist_cols  = [f'mkt_min_dfd{d}'  for d in range(observation_dfd, min(observation_dfd + 10, 50))]
+
+    def _slope(row, cols):
+        vals = [row[c] for c in cols if not np.isnan(row[c])]
+        if len(vals) < 2:
+            return 0.0
+        return float(np.polyfit(range(len(vals)), vals, 1)[0])
+
+    mkt_traj['mkt_trend']     = mkt_traj.apply(lambda r: _slope(r, mean_hist_cols), axis=1)
+    mkt_traj['mkt_min_trend'] = mkt_traj.apply(lambda r: _slope(r, min_hist_cols),  axis=1)
+    last_mean_col = f'mkt_mean_dfd{min(observation_dfd + 9, 49)}'
+    mkt_traj['mkt_recent_vs_old'] = mkt_traj[f'mkt_mean_dfd{observation_dfd}'] - mkt_traj[last_mean_col]
+
     ff = static.merge(at_obs, on=FLIGHT_KEY, how='left')
     ff = ff.merge(hist_stats, on=FLIGHT_KEY, how='left')
     ff = ff.merge(lookback, on=FLIGHT_KEY, how='left')
     ff = ff.merge(market_stats, on=['pathod_id', 'depdt'], how='left')
+    ff = ff.merge(mkt_traj, on=['pathod_id', 'depdt'], how='left')
 
     future = df[df['dfd'] < observation_dfd][
         FLIGHT_KEY + ['dfd', 'expected_minfare', 'target_price']
@@ -99,6 +131,8 @@ def build_features(df, observation_dfd=OBSERVATION_DFD):
     data['airline_enc'] = data['airline'].astype('category').cat.codes
     data['baseline_pred'] = np.maximum(data['price_at_obs'], data['expected_minfare'])
     data['residual'] = data['target_price'] - data['baseline_pred']
+    # Relative momentum: own trend vs. market trend
+    data['price_vs_mkt_trend'] = data['price_trend'] - data['mkt_trend']
     return data
 
 
@@ -113,10 +147,18 @@ TABULAR_FEATURES = [
     'price_dfd40', 'price_dfd41', 'price_dfd42', 'price_dfd43', 'price_dfd44',
     'price_dfd45', 'price_dfd46', 'price_dfd47', 'price_dfd48', 'price_dfd49',
     'baseline_pred',
+    # Competitor trajectory features
+    'mkt_mean_dfd40', 'mkt_mean_dfd41', 'mkt_mean_dfd42', 'mkt_mean_dfd43', 'mkt_mean_dfd44',
+    'mkt_mean_dfd45', 'mkt_mean_dfd46', 'mkt_mean_dfd47', 'mkt_mean_dfd48', 'mkt_mean_dfd49',
+    'mkt_min_dfd40',  'mkt_min_dfd41',  'mkt_min_dfd42',  'mkt_min_dfd43',  'mkt_min_dfd44',
+    'mkt_min_dfd45',  'mkt_min_dfd46',  'mkt_min_dfd47',  'mkt_min_dfd48',  'mkt_min_dfd49',
+    'mkt_trend', 'mkt_min_trend', 'mkt_recent_vs_old', 'price_vs_mkt_trend',
 ]
 
 # Price history columns (10 steps: dfd=40..49) used as the sequence input
 HISTORY_COLS = [f'price_dfd{d}' for d in range(40, 50)]
+# Market mean history columns – used as 3rd sequence channel
+MKT_MEAN_HISTORY_COLS = [f'mkt_mean_dfd{d}' for d in range(40, 50)]
 
 # ---------------------------------------------------------------------------
 # Metric helpers
@@ -243,23 +285,33 @@ class GRUModel(nn.Module):
 
 def make_sequence_tensor(data, scaler_price):
     """
-    Build normalised sequence tensor (batch, 2, 10) for CNN
-    and (batch, 10, 2) for GRU from raw data.
+    Build normalised sequence tensor for CNN and GRU from raw data.
+
+    Channels:
+      0 – own price history / price_at_obs
+      1 – relative dfd position [0..1]
+      2 – market mean history / market_mean_price  (competitor effect)
+
+    CNN shape: (batch, 3, 10)
+    GRU shape: (batch, 10, 3)
     """
     prices = data[HISTORY_COLS].fillna(0).values.astype(np.float32)
     price_at_obs = data['price_at_obs'].fillna(1).values.astype(np.float32)[:, None]
-
-    # Normalise: each flight's price history divided by its price_at_obs
     norm_prices = prices / (price_at_obs + 1e-6)
 
-    # Second channel: relative dfd position [0..1] – same for all rows
+    # Second channel: relative dfd position [0..1]
     dfd_pos = np.linspace(0, 1, 10, dtype=np.float32)
     dfd_ch = np.tile(dfd_pos, (len(data), 1))  # (batch, 10)
 
+    # Third channel: competitor market mean trajectory, normalised by its value at obs
+    mkt_prices = data[MKT_MEAN_HISTORY_COLS].fillna(0).values.astype(np.float32)
+    mkt_at_obs = data['market_mean_price'].fillna(1).values.astype(np.float32)[:, None]
+    norm_mkt = mkt_prices / (mkt_at_obs + 1e-6)
+
     # CNN expects (batch, channels, time)
-    seq_cnn = np.stack([norm_prices, dfd_ch], axis=1)  # (batch, 2, 10)
+    seq_cnn = np.stack([norm_prices, dfd_ch, norm_mkt], axis=1)  # (batch, 3, 10)
     # GRU expects (batch, time, features)
-    seq_gru = np.stack([norm_prices, dfd_ch], axis=2)  # (batch, 10, 2)
+    seq_gru = np.stack([norm_prices, dfd_ch, norm_mkt], axis=2)  # (batch, 10, 3)
     return seq_cnn, seq_gru
 
 
@@ -460,7 +512,7 @@ def main():
     # Model 2: 1D-CNN
     # ==================================================================
     print("\n=== Model 2: 1D-CNN ===")
-    cnn = CNN1D(tab_dim, seq_len=10, seq_channels=2, dropout=0.2).to(DEVICE)
+    cnn = CNN1D(tab_dim, seq_len=10, seq_channels=3, dropout=0.2).to(DEVICE)
     cnn, _ = train_model(cnn, X_tr, seq_tr_cnn_s, seq_tr_gru_s, y_tr,
                          X_va, seq_va_cnn_s, seq_va_gru_s, y_va,
                          model_type='cnn', epochs=150, batch_size=4096,
@@ -473,7 +525,7 @@ def main():
     # Model 3: GRU
     # ==================================================================
     print("\n=== Model 3: GRU ===")
-    gru = GRUModel(tab_dim, seq_input=2, hidden=64, num_layers=2, dropout=0.2).to(DEVICE)
+    gru = GRUModel(tab_dim, seq_input=3, hidden=64, num_layers=2, dropout=0.2).to(DEVICE)
     gru, _ = train_model(gru, X_tr, seq_tr_cnn_s, seq_tr_gru_s, y_tr,
                          X_va, seq_va_cnn_s, seq_va_gru_s, y_va,
                          model_type='gru', epochs=150, batch_size=4096,
