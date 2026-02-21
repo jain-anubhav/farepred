@@ -1,0 +1,646 @@
+{
+  "overall": {
+    "rmse": 58.375226344995475,
+    "baseline_rmse": 63.56634130978073,
+    "mean_residual": 3.49266207078077,
+    "std_residual": 58.27073226395301,
+    "pct_positive": 0.36293221798212955,
+    "p25_abs": 6.769597982577771,
+    "p50_abs": 16.65526518215688,
+    "p75_abs": 37.055561494318574,
+    "p95_abs": 106.46242735826407
+  },
+  "by_dfd_bucket": [
+    {
+      "_bucket": "0-4",
+      "rmse": 79.16684373779094,
+      "mean_residual": 7.66774082524607,
+      "n": 36242.0
+    },
+    {
+      "_bucket": "5-9",
+      "rmse": 81.27292393713216,
+      "mean_residual": 10.99062345863861,
+      "n": 40780.0
+    },
+    {
+      "_bucket": "10-19",
+      "rmse": 63.96925628981657,
+      "mean_residual": 3.8398161146137553,
+      "n": 85779.0
+    },
+    {
+      "_bucket": "20-29",
+      "rmse": 47.547231279421055,
+      "mean_residual": 0.8972651909290043,
+      "n": 89660.0
+    },
+    {
+      "_bucket": "30-39",
+      "rmse": 36.450268366083236,
+      "mean_residual": 0.7103560060538029,
+      "n": 91347.0
+    }
+  ],
+  "by_key_dfd": [
+    {
+      "dfd": 0,
+      "rmse": 82.13301234631486,
+      "baseline_rmse": 89.50117704800942,
+      "mean_residual": 8.207767236757391,
+      "n": 6057
+    },
+    {
+      "dfd": 5,
+      "rmse": 79.44029279853456,
+      "baseline_rmse": 87.08320527204972,
+      "mean_residual": 8.042350786369349,
+      "n": 7828
+    },
+    {
+      "dfd": 10,
+      "rmse": 75.02734237243155,
+      "baseline_rmse": 82.19090858793238,
+      "mean_residual": 8.22399831369418,
+      "n": 8505
+    },
+    {
+      "dfd": 15,
+      "rmse": 65.66797309677223,
+      "baseline_rmse": 70.59402750820233,
+      "mean_residual": 6.468419700571787,
+      "n": 8516
+    },
+    {
+      "dfd": 20,
+      "rmse": 50.332495239605166,
+      "baseline_rmse": 54.17686484918614,
+      "mean_residual": -3.3048832041462797,
+      "n": 8801
+    },
+    {
+      "dfd": 25,
+      "rmse": 47.8865537093357,
+      "baseline_rmse": 51.0316167207475,
+      "mean_residual": 2.59068929673082,
+      "n": 9004
+    },
+    {
+      "dfd": 30,
+      "rmse": 41.58752747193852,
+      "baseline_rmse": 43.1766283869161,
+      "mean_residual": 1.619478602251223,
+      "n": 9089
+    },
+    {
+      "dfd": 35,
+      "rmse": 35.74030181482081,
+      "baseline_rmse": 38.298553530721264,
+      "mean_residual": 1.351117709352842,
+      "n": 9137
+    },
+    {
+      "dfd": 39,
+      "rmse": 26.563025972553717,
+      "baseline_rmse": 26.59613258138871,
+      "mean_residual": -2.2412907713212524,
+      "n": 9192
+    }
+  ],
+  "worst_markets": [
+    {
+      "pathod_id": 4,
+      "rmse": 102.512346982303,
+      "mean_residual": 6.975921139694045,
+      "n": 15885.0
+    },
+    {
+      "pathod_id": 1,
+      "rmse": 89.05266601584232,
+      "mean_residual": 9.786248433294997,
+      "n": 28376.0
+    },
+    {
+      "pathod_id": 9,
+      "rmse": 60.76109976652291,
+      "mean_residual": 11.788452184975938,
+      "n": 77019.0
+    },
+    {
+      "pathod_id": 2,
+      "rmse": 55.13547227113399,
+      "mean_residual": -9.742013281894076,
+      "n": 7140.0
+    },
+    {
+      "pathod_id": 8,
+      "rmse": 52.22985149064757,
+      "mean_residual": 10.895470011892193,
+      "n": 28167.0
+    },
+    {
+      "pathod_id": 3,
+      "rmse": 51.31651477802716,
+      "mean_residual": 0.7518528915717188,
+      "n": 37123.0
+    },
+    {
+      "pathod_id": 6,
+      "rmse": 50.887276113923164,
+      "mean_residual": -6.270584034857933,
+      "n": 42667.0
+    },
+    {
+      "pathod_id": 7,
+      "rmse": 48.943742858725926,
+      "mean_residual": -4.866694393606901,
+      "n": 23758.0
+    }
+  ],
+  "market_rmse_spread": {
+    "min": 38.57611759902118,
+    "max": 102.512346982303,
+    "std": 20.705686216877226,
+    "n_markets": 10
+  },
+  "by_airline": [
+    {
+      "airline_enc": 1,
+      "rmse": 61.206951211261234,
+      "mean_residual": 2.9718319964367055,
+      "n": 184293.0
+    },
+    {
+      "airline_enc": 0,
+      "rmse": 54.92215992116042,
+      "mean_residual": 4.094394427556565,
+      "n": 159515.0
+    }
+  ],
+  "by_depdow": [
+    {
+      "_bucket": "0",
+      "rmse": 69.7682389909915,
+      "mean_residual": 3.5424476509336023,
+      "n": 50925.0
+    },
+    {
+      "_bucket": "1",
+      "rmse": 58.08682875246646,
+      "mean_residual": 1.1450978037624715,
+      "n": 50837.0
+    },
+    {
+      "_bucket": "2",
+      "rmse": 41.93880750004259,
+      "mean_residual": 3.139304539660019,
+      "n": 45595.0
+    },
+    {
+      "_bucket": "3",
+      "rmse": 49.853311906670356,
+      "mean_residual": 6.235745983278578,
+      "n": 50751.0
+    },
+    {
+      "_bucket": "4",
+      "rmse": 64.85638170556798,
+      "mean_residual": 6.08254640606609,
+      "n": 52519.0
+    },
+    {
+      "_bucket": "5",
+      "rmse": 58.55375745638086,
+      "mean_residual": -0.18270786456348725,
+      "n": 51319.0
+    },
+    {
+      "_bucket": "6",
+      "rmse": 59.65598348661494,
+      "mean_residual": 4.598750008970129,
+      "n": 41862.0
+    }
+  ],
+  "by_dephour": [
+    {
+      "_bucket": "0-6",
+      "rmse": 44.631954206491066,
+      "mean_residual": 0.011243509079858318,
+      "n": 39288.0
+    },
+    {
+      "_bucket": "7-12",
+      "rmse": 56.49381838668519,
+      "mean_residual": 2.694583425263923,
+      "n": 137901.0
+    },
+    {
+      "_bucket": "13-18",
+      "rmse": 62.73539727707575,
+      "mean_residual": 4.467249584765953,
+      "n": 123927.0
+    },
+    {
+      "_bucket": "19-24",
+      "rmse": 62.25480073200993,
+      "mean_residual": 6.445348965325006,
+      "n": 42692.0
+    }
+  ],
+  "by_price_tier": [
+    {
+      "_bucket": "low",
+      "rmse": 25.784054850885163,
+      "mean_residual": -14.63497867157535,
+      "n": 85965.0
+    },
+    {
+      "_bucket": "med-low",
+      "rmse": 30.69854410659465,
+      "mean_residual": -8.68324113997145,
+      "n": 85978.0
+    },
+    {
+      "_bucket": "med-high",
+      "rmse": 38.925750239738505,
+      "mean_residual": 0.3615009070548957,
+      "n": 87157.0
+    },
+    {
+      "_bucket": "high",
+      "rmse": 103.15334033616263,
+      "mean_residual": 37.469441787189545,
+      "n": 84708.0
+    }
+  ],
+  "by_offer_month": [
+    {
+      "_bucket": "1",
+      "rmse": 50.33735897257084,
+      "mean_residual": -4.266797550820748,
+      "n": 31129.0
+    },
+    {
+      "_bucket": "2",
+      "rmse": 57.38502893337031,
+      "mean_residual": 3.3386112821518803,
+      "n": 111291.0
+    },
+    {
+      "_bucket": "3",
+      "rmse": 61.55757944824984,
+      "mean_residual": 1.201902810550832,
+      "n": 118093.0
+    },
+    {
+      "_bucket": "4",
+      "rmse": 57.84690468229661,
+      "mean_residual": 9.846120480006602,
+      "n": 83295.0
+    }
+  ],
+  "ml_vs_baseline": {
+    "pct_ml_better": 0.36572447412509307,
+    "pct_baseline_better": 0.6342755258749069,
+    "worst_ml_dfd_buckets": {
+      "0-4": 26938,
+      "5-9": 26067,
+      "10-19": 52165,
+      "20-29": 52719,
+      "30-39": 60180
+    }
+  },
+  "feature_corr_with_abs_residual": {
+    "highest_positive": [
+      {
+        "feature": "hist_price_max",
+        "corr": 0.3716
+      },
+      {
+        "feature": "price_above_emf",
+        "corr": 0.3557
+      },
+      {
+        "feature": "price_at_obs",
+        "corr": 0.3519
+      },
+      {
+        "feature": "price_dfd40",
+        "corr": 0.3519
+      },
+      {
+        "feature": "hist_price_mean",
+        "corr": 0.3487
+      },
+      {
+        "feature": "price_dfd41",
+        "corr": 0.3415
+      },
+      {
+        "feature": "price_dfd42",
+        "corr": 0.3351
+      },
+      {
+        "feature": "price_dfd45",
+        "corr": 0.3308
+      }
+    ],
+    "highest_negative": [
+      {
+        "feature": "dfd_frac",
+        "corr": -0.1532
+      },
+      {
+        "feature": "dfd",
+        "corr": -0.1532
+      },
+      {
+        "feature": "pathod_id",
+        "corr": -0.0826
+      },
+      {
+        "feature": "price_trend",
+        "corr": -0.0651
+      },
+      {
+        "feature": "offer_neardep_n",
+        "corr": -0.0377
+      }
+    ],
+    "note": "positive corr = higher feature value \u2192 larger error"
+  },
+  "dfd_x_price_interaction": [
+    {
+      "dfd_b": "0-9",
+      "price_b": "low",
+      "rmse": 39.79,
+      "mean_res": -33.34,
+      "n": 1026
+    },
+    {
+      "dfd_b": "0-9",
+      "price_b": "mid",
+      "rmse": 34.62,
+      "mean_res": -18.44,
+      "n": 6990
+    },
+    {
+      "dfd_b": "0-9",
+      "price_b": "high",
+      "rmse": 83.97,
+      "mean_res": 12.89,
+      "n": 69006
+    },
+    {
+      "dfd_b": "10-19",
+      "price_b": "low",
+      "rmse": 32.11,
+      "mean_res": -21.63,
+      "n": 11775
+    },
+    {
+      "dfd_b": "10-19",
+      "price_b": "mid",
+      "rmse": 30.69,
+      "mean_res": -13.56,
+      "n": 29168
+    },
+    {
+      "dfd_b": "10-19",
+      "price_b": "high",
+      "rmse": 83.34,
+      "mean_res": 21.85,
+      "n": 44836
+    },
+    {
+      "dfd_b": "20-29",
+      "price_b": "low",
+      "rmse": 27.06,
+      "mean_res": -16.24,
+      "n": 34442
+    },
+    {
+      "dfd_b": "20-29",
+      "price_b": "mid",
+      "rmse": 32.88,
+      "mean_res": -6.29,
+      "n": 25371
+    },
+    {
+      "dfd_b": "20-29",
+      "price_b": "high",
+      "rmse": 70.9,
+      "mean_res": 26.78,
+      "n": 29847
+    },
+    {
+      "dfd_b": "30-39",
+      "price_b": "low",
+      "rmse": 21.66,
+      "mean_res": -10.58,
+      "n": 38722
+    },
+    {
+      "dfd_b": "30-39",
+      "price_b": "mid",
+      "rmse": 26.95,
+      "mean_res": -2.56,
+      "n": 24449
+    },
+    {
+      "dfd_b": "30-39",
+      "price_b": "high",
+      "rmse": 55.07,
+      "mean_res": 19.07,
+      "n": 28176
+    }
+  ],
+  "by_n_airlines": [
+    {
+      "_bucket": "2",
+      "rmse": 48.34369296799022,
+      "mean_residual": -9.041507672630992,
+      "n": 10596.0
+    },
+    {
+      "_bucket": "3",
+      "rmse": 58.66609093714711,
+      "mean_residual": 3.891243342167128,
+      "n": 333212.0
+    }
+  ],
+  "top_feature_importances": [
+    {
+      "feature": "dfd",
+      "importance": "15229"
+    },
+    {
+      "feature": "hist_traj_std",
+      "importance": "9064"
+    },
+    {
+      "feature": "offer_dayofyear",
+      "importance": "8610"
+    },
+    {
+      "feature": "price_to_emf",
+      "importance": "8421"
+    },
+    {
+      "feature": "dephour",
+      "importance": "8121"
+    },
+    {
+      "feature": "hist_traj_ratio_mean",
+      "importance": "7602"
+    },
+    {
+      "feature": "hist_traj_mean",
+      "importance": "6854"
+    },
+    {
+      "feature": "hist_traj_ratio_std",
+      "importance": "6755"
+    },
+    {
+      "feature": "emf_ratio_to_obs",
+      "importance": "6604"
+    },
+    {
+      "feature": "price_trend",
+      "importance": "6248"
+    },
+    {
+      "feature": "hist_traj_emf_price",
+      "importance": "6230"
+    },
+    {
+      "feature": "hist_traj_median",
+      "importance": "5579"
+    },
+    {
+      "feature": "offer_obs_std",
+      "importance": "5476"
+    },
+    {
+      "feature": "price_recent_vs_old",
+      "importance": "5319"
+    },
+    {
+      "feature": "hist_price_std",
+      "importance": "4839"
+    },
+    {
+      "feature": "market_max_price",
+      "importance": "4735"
+    },
+    {
+      "feature": "price_to_market_min",
+      "importance": "4645"
+    },
+    {
+      "feature": "offer_neardep_mean",
+      "importance": "4522"
+    },
+    {
+      "feature": "expected_minfare",
+      "importance": "4489"
+    },
+    {
+      "feature": "hist_ratio_std",
+      "importance": "4372"
+    },
+    {
+      "feature": "price_vs_offer_obs_median",
+      "importance": "4238"
+    },
+    {
+      "feature": "offer_neardep_n",
+      "importance": "4173"
+    },
+    {
+      "feature": "baseline_pred",
+      "importance": "4044"
+    },
+    {
+      "feature": "hist_price_range",
+      "importance": "3973"
+    },
+    {
+      "feature": "hist_ratio_min",
+      "importance": "3941"
+    }
+  ],
+  "base_rmse": 58.375226344995475,
+  "baseline_rmse": 63.56634130978073,
+  "model_description": "LightGBM log-ratio target (model_agent_v4): predicts log(price/baseline), same features as v4",
+  "feature_cols": [
+    "dfd",
+    "dfd_diff",
+    "dfd_frac",
+    "dephour",
+    "depdow",
+    "airline_enc",
+    "pathod_id",
+    "price_at_obs",
+    "emf_at_obs",
+    "expected_minfare",
+    "emf_ratio_to_obs",
+    "price_to_emf",
+    "price_to_market_min",
+    "price_above_emf",
+    "hist_price_mean",
+    "hist_price_std",
+    "hist_price_max",
+    "hist_price_min",
+    "hist_price_range",
+    "hist_ratio_mean",
+    "hist_ratio_std",
+    "hist_ratio_max",
+    "hist_ratio_min",
+    "price_trend",
+    "price_recent_vs_old",
+    "market_min_price",
+    "market_max_price",
+    "market_mean_price",
+    "market_n_airlines",
+    "price_dfd40",
+    "price_dfd41",
+    "price_dfd42",
+    "price_dfd43",
+    "price_dfd44",
+    "price_dfd45",
+    "price_dfd46",
+    "price_dfd47",
+    "price_dfd48",
+    "price_dfd49",
+    "hist_traj_mean_at_obs",
+    "hist_traj_median_at_obs",
+    "hist_traj_std_at_obs",
+    "hist_traj_ratio_at_obs",
+    "hist_traj_mean",
+    "hist_traj_median",
+    "hist_traj_std",
+    "hist_traj_ratio_mean",
+    "hist_traj_ratio_std",
+    "hist_traj_emf_price",
+    "price_vs_hist_traj",
+    "baseline_pred",
+    "offer_obs_mean",
+    "offer_obs_median",
+    "offer_obs_std",
+    "offer_obs_min",
+    "offer_obs_max",
+    "offer_obs_n",
+    "offer_obs_emf_mean",
+    "offer_neardep_mean",
+    "offer_neardep_median",
+    "offer_neardep_n",
+    "offer_month",
+    "offer_dow",
+    "offer_dayofyear",
+    "price_vs_offer_obs_mean",
+    "price_vs_offer_obs_median",
+    "price_ratio_to_offer_obs"
+  ]
+}
